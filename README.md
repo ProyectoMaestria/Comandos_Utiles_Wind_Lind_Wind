@@ -1,12 +1,12 @@
-<h1 align="center">Comandos para Windows --- Linux --- Mac</h1>
+<h1 align="center">Comandos para Windows — Linux — Mac</h1>
 
-## Índice
+## 📑 Índice
 
 - [Windows](#windows)
 - [Linux](#linux)
 - [Mac](#mac)
 - [Otros](#otros)
-- [Programas_Linux](#programas)
+- [Programas](#programas)
 - [Licencia](#licencia)
 - [Conclusión](#conclusión)
 
@@ -16,199 +16,201 @@
 
 ---
 
-## Windows
+# 🪟 Windows
 
-### Crear tarea y programarla en Windows
+## 🧩 Tareas programadas (schtasks)
 
-#### Crear tarea
-
+### Crear tarea
+```bash
 schtasks /Create /TN WormDefenderTemp /SC ONCE /ST 23:59 /TR "\"C:\Users\Asus\AppData\Local\Programs\Python\Python312\pythonw.exe\" \"C:\Users\worm\worm\WormDefender.py\"" /F
+```
 
-#### Ejecutarla ya
-
+### Ejecutarla
+```bash
 schtasks /Run /TN WormDefenderTemp
+```
 
-#### Verificar
-
+### Verificar
+```bash
 schtasks /Query /TN WormDefenderTemp
+```
 
-#### Eliminar
-
+### Eliminar
+```bash
 schtasks /delete /tn "WormDefenderTemp" /f
+```
 
-### Sirve para detectar Scripts o procesos sospechosos o quien lazo q cosa, o procesos ocultos
-Descripcion por linea: 1. Le pide a Windows la lista completa de procesos en ejecución.
-Es como abrir el “Administrador de tareas”, pero con rayos X: te da más detalle interno.
-2.Filtra solo los procesos cuyo nombre coincida con:
+---
 
-python
-powershell
-cmd
+## 🕵️ Detección de procesos sospechosos
 
-Ese -match usa regex, así que encuentra cualquier cosa que contenga esas palabras.
-3. De esos procesos, saca datos clave:
-
-ProcessId → el ID del proceso
-ParentProcessId → quién lo lanzó (esto es oro puro 🔥)
-Name → nombre del ejecutable
-CommandLine → el comando exacto con el que se inició
-
-4. Lo muestra en formato lista, bonito y legible (no en tabla apretada).
-
+```powershell
 Get-CimInstance Win32_Process |
 Where-Object { $_.Name -match 'python|powershell|cmd' } |
 Select-Object ProcessId, ParentProcessId, Name, CommandLine |
 Format-List
+```
 
+> ⚠️ **Propósito**  
+> Detectar procesos sospechosos, scripts ocultos o identificar quién lanzó qué.
 
+### 🔍 Qué hace
 
+1. Lista todos los procesos en ejecución  
+2. Filtra por:
+   - python  
+   - powershell  
+   - cmd  
+3. Extrae información relevante  
 
-### Como abrir un cuadro de texto
-cmd /c msg * "Estas siendo revisados"
+### 📊 Datos clave
 
+| Campo | Significado |
+|------|------------|
+| ProcessId | ID del proceso |
+| ParentProcessId | Proceso padre (quién lo lanzó) 🔥 |
+| Name | Nombre del ejecutable |
+| CommandLine | Comando exacto |
+
+---
+
+## 💬 Mensajes en pantalla
+
+```bash
+cmd /c msg * "Estas siendo revisado"
 cmd /c msg %USERNAME% "Hola mundo"
+```
 
-ejec_com cmd /c msg * %USERNAME%  "Hola mundo"
+---
 
-## Linux
+# 🐧 Linux
 
-### Como abrir un cuadro de texto
+## 💬 Mensajes
 
-zenity --info --text="Estas siendo revisados"
+```bash
+zenity --info --text="Estas siendo revisado"
 echo "Hola mundo"
+```
 
-### Revisar archivos pesados Linux
+---
 
+## 📂 Uso de disco
+
+```bash
 sudo du -xhd1 /var/lib 2>/dev/null | sort -h
 sudo du -xhd1 /var/log 2>/dev/null | sort -h
 sudo du -xhd1 /home/worm 2>/dev/null | sort -h
 sudo du -xhd1 /usr 2>/dev/null | sort -h
+```
 
-### Ver tamaño legible de archivos
+---
 
-ls -lah  Para ver mas en formato humano
+## 📏 Tamaño de archivos
 
-### Para ver permisos de un archivo o carpeta:
+```bash
+ls -lah
+```
 
+---
+
+## 🔐 Permisos
+
+```bash
 ls -l ruta
-
-### Para ver permisos de una carpeta:
-
 ls -ld /home/worm/worm
-
-### Para ver permisos de un archivo o carpeta:
-
-ls -l ruta
-
-### Si quieres ver también dueño y grupo de varias cosas:
-
 ls -la /home/worm
+```
 
-### Para ver cuanto ocupa realmente algo (mucho mejor para carpetas/logs):
+---
 
+## 📦 Uso real de espacio
+
+```bash
 du -sh *
-
-### O para algo especifico:
-
 du -sh archivo.log
+```
 
-## Mac
+---
 
-### Como abrir un cuadro de texto
-MAC
+# 🍎 Mac
+
+## 💬 Mensajes
+
+```bash
 osascript -e 'display dialog "Proceso completado" buttons {"OK"}'
+```
 
+---
 
-## Disponible
+# ⚙️ Otros
 
-Contenido aquí...
+## 🕵️ Procesos
 
-## Otros
-
-### COmo ver procesos por PID -y Matarlo
-
-lsof -i :8765
-
-kill -9 PID
-
-### Copiar algo mediante ssh
-
-scp algoritmo.sh worm@10.11.176.:/home/worm/worm
-
-###  Revisar en linux procesos
-2. Procesos en ejecución (la cacería)
-Lista todos los procesos
-Filtra los que tengan python o WormDefender
-Quita el propio grep para no contaminar
-
-👉 Clásico de sysadmin. Aquí ves si tu gusano está vivo… o si hay clones.
-
+```bash
 ps aux | grep -i worm | grep -v grep
-
-Versión más general:
-
--i → ignora mayúsculas/minúsculas
-Busca cualquier cosa con “worm”
-
-👉 Esto es más paranoico (bien): detecta nombres ligeramente distintos.
-
-lsof | grep worm_chain.log
-
-Aquí ya estás haciendo cirugía.
-
-lsof = lista archivos abiertos por procesos
-Filtras por tu log
-
-📂 Estado del log
-ls -lh /home/worm/worm_chain.log
-Tamaño del archivo
-Fecha de modificación
-
-👉 Si crece demasiado rápido → algo está fuera de control
-
-
-df -h
 ps aux | grep -E "python|WormDefender" | grep -v grep
 pgrep -af python
+pgrep -af WormDefender
+```
+
+### Alternativa más limpia
+```bash
+pgrep -af python
+```
+
+---
+
+## 🔌 Puertos y procesos
+
+```bash
+lsof -i :8765
+kill -9 PID
+```
+
+---
+
+## 📂 Logs y monitoreo
+
+```bash
 lsof | grep worm_chain.log
 ls -lh /home/worm/worm_chain.log
 tail -n 50 /home/worm/worm_chain.log
+```
 
+---
 
-ps aux | grep -i worm | grep -v grep
-ps aux | grep -E "python|WormDefender" | grep -v grep
-pgrep -af WormDefender
-pgrep -af python
+## 🌐 Sistema
 
+```bash
+df -h
+```
 
+---
 
-lsof | grep worm_chain.log
+## 📡 Copiar por SSH
 
-### Mas elegante q ps + grep
+```bash
+scp algoritmo.sh worm@10.11.176.:/home/worm/worm
+```
 
-pgrep -af python
+---
 
-Más elegante que ps + grep.
+## 🔐 Instalar SSH
 
-pgrep busca procesos directamente
--a → muestra el comando completo
--f → busca en toda la línea de comando
-
-### Instalar ssh Linux
-
-1.
+```bash
 sudo apt update
 sudo apt install openssh-server
 
-2.
 sudo systemctl enable ssh
 sudo systemctl start ssh
-
-3.
 sudo systemctl status ssh
+```
 
+---
 
-### Instalar Python3.12 Linux
+## 🐍 Instalar Python 3.12
+
+```bash
 sudo apt update
 
 sudo apt install -y \
@@ -228,7 +230,9 @@ liblzma-dev \
 tk-dev \
 uuid-dev \
 xz-utils
+```
 
+```bash
 cd /usr/src
 sudo wget https://www.python.org/ftp/python/3.12.3/Python-3.12.3.tgz
 sudo tar -xzf Python-3.12.3.tgz
@@ -237,54 +241,56 @@ cd Python-3.12.3
 sudo ./configure --enable-optimizations
 sudo make -j"$(nproc)"
 sudo make altinstall
+```
 
+---
 
-#### Ambientes virtuales python
-PARA WINDOWS: gusano\Scripts\activate
+## 🧪 Entornos virtuales
 
-PARA LINUX: source gusano/bin/activate
-
+```bash
+# Windows
 gusano\Scripts\activate
 
+# Linux
+source gusano/bin/activate
+```
 
-## Programa
-### Instalacion Programas
+---
 
-#### Instalar sublime text
+# 📦 Programas
 
+## Sublime Text
+
+```bash
 curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | \
 gpg --dearmor | sudo tee /usr/share/keyrings/sublimehq-archive.gpg > /dev/null
 
-
 echo "deb [signed-by=/usr/share/keyrings/sublimehq-archive.gpg] https://download.sublimetext.com/ apt/stable/" | \
 sudo tee /etc/apt/sources.list.d/sublime-text.list
+```
 
+---
 
-#### Instalar code
+## VS Code
 
-wget -qO- https://packages.microsoft.com/keys/microsoft.asc | \
-gpg --dearmor | sudo tee /usr/share/keyrings/microsoft.gpg > /dev/null
-
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | \
-sudo tee /etc/apt/sources.list.d/vscode.list
-
-sudo rm -f /etc/apt/sources.list.d/vscode.list
-sudo rm -f /usr/share/keyrings/microsoft.gpg
-
+```bash
 sudo mkdir -p /etc/apt/keyrings
+
 curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | \
 sudo gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg
 
 echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | \
 sudo tee /etc/apt/sources.list.d/vscode.list
+```
 
+---
 
-
-
-## Licencia
+# 📜 Licencia
 
 Contenido aquí...
 
-## Conclusión
+---
+
+# 🧠 Conclusión
 
 Contenido aquí...
