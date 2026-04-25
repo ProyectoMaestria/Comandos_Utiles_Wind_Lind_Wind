@@ -74,11 +74,13 @@ Format-List
 
 ---
 
-## 💬 Mensajes en pantalla
+## 💬 Mensajes en pantalla Windows
 
 ```bash
-cmd /c msg * "Estas siendo revisado"
+cmd /c msg * "Estas siendo revisados"
 cmd /c msg %USERNAME% "Hola mundo"
+ejec_com cmd /c msg * %USERNAME%  "Hola mundo"
+
 ```
 
 ---
@@ -94,7 +96,15 @@ echo "Hola mundo"
 
 ---
 
+
+## 🌐 Sistema
+### Permite ver el espacio en discos
+```bash
+df -h
+```
+---
 ## 📂 Uso de disco
+### Esto permite observar los pesos de los archivos y resolver problemas de disco lleno
 
 ```bash
 sudo du -xhd1 /var/lib 2>/dev/null | sort -h
@@ -106,7 +116,7 @@ sudo du -xhd1 /usr 2>/dev/null | sort -h
 ---
 
 ## 📏 Tamaño de archivos
-
+### Ver tamaño legible de archivos
 ```bash
 ls -lah
 ```
@@ -114,20 +124,33 @@ ls -lah
 ---
 
 ## 🔐 Permisos
-
+### 1. Para ver permisos de una archivo: 
+### 2. Para ver permisos de una carpeta:
+### 3. Si quieres ver también dueño y grupo de varias cosas:
 ```bash
 ls -l ruta
 ls -ld /home/worm/worm
 ls -la /home/worm
 ```
-
----
-
-## 📦 Uso real de espacio
-
+### Para ver cuanto ocupa realmente algo (mucho mejor para carpetas/logs):
 ```bash
 du -sh *
+```
+
+```bash
+
+```
+
+### O para algo especifico:
+```bash
 du -sh archivo.log
+```
+---
+
+## 📦 Disponible
+
+```bash
+
 ```
 
 ---
@@ -145,19 +168,27 @@ osascript -e 'display dialog "Proceso completado" buttons {"OK"}'
 # ⚙️ Otros
 
 ## 🕵️ Procesos
-
+### 👉 Clásico de sysadmin. Aquí ves si tu gusano está vivo… o si hay clones.
 ```bash
 ps aux | grep -i worm | grep -v grep
 ps aux | grep -E "python|WormDefender" | grep -v grep
 pgrep -af python
 pgrep -af WormDefender
 ```
+###  Nota: -i → ignora mayúsculas/minúsculas, Busca cualquier cosa con “worm”
 
-### Alternativa más limpia
+### Alternativa más limpia a la anterior:
+### Ejemplo: pgrep -af WormDefender
 ```bash
 pgrep -af python
 ```
+Más elegante que ps + grep.
 
+```bash
+pgrep busca procesos directamente
+-a → muestra el comando completo
+-f → busca en toda la línea de comando
+```
 ---
 
 ## 🔌 Puertos y procesos
@@ -166,23 +197,36 @@ pgrep -af python
 lsof -i :8765
 kill -9 PID
 ```
-
 ---
 
-## 📂 Logs y monitoreo
+## 👉 Esto es más paranoico (bien): detecta nombres ligeramente distintos.
+### Aquí ya estás haciendo cirugía.
+
+lsof = lista archivos abiertos por procesos
+Filtras por tu log
 
 ```bash
+
 lsof | grep worm_chain.log
-ls -lh /home/worm/worm_chain.log
+```
+
+## 📂 Logs y monitoreo
+###  Permite leer las 50 primeras lineas
+```bash
 tail -n 50 /home/worm/worm_chain.log
 ```
 
----
+## 📂 Estado del log
 
-## 🌐 Sistema
+### 👉 Si crece demasiado rápido → algo está fuera de control
 
+Tamaño del archivo
+Fecha de modificación
 ```bash
-df -h
+ls -lh /home/worm/worm_chain.log
+```
+```bash
+
 ```
 
 ---
@@ -230,9 +274,7 @@ liblzma-dev \
 tk-dev \
 uuid-dev \
 xz-utils
-```
 
-```bash
 cd /usr/src
 sudo wget https://www.python.org/ftp/python/3.12.3/Python-3.12.3.tgz
 sudo tar -xzf Python-3.12.3.tgz
@@ -241,6 +283,7 @@ cd Python-3.12.3
 sudo ./configure --enable-optimizations
 sudo make -j"$(nproc)"
 sudo make altinstall
+
 ```
 
 ---
@@ -274,13 +317,16 @@ sudo tee /etc/apt/sources.list.d/sublime-text.list
 ## VS Code
 
 ```bash
-sudo mkdir -p /etc/apt/keyrings
+Pasos: 
+1. sudo apt update && sudo apt upgrade -y
+2. sudo apt install -y wget gpg
+3. wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+sudo install -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/
 
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | \
-sudo gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg
+4. echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
+5. sudo apt update
+ sudo apt install code
 
-echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | \
-sudo tee /etc/apt/sources.list.d/vscode.list
 ```
 
 ---
