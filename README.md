@@ -7,9 +7,10 @@
 - [Mac](#mac)
 - [Otros](#otros)
 - [Programas](#programas)
+- [Librerias](#librerias)
 - [Licencia](#licencia)
 - [Conclusión](#conclusión)
-
+Librerias
 <h4 align="center">
 🚧 Proyecto en construcción 🚧
 </h4>
@@ -87,6 +88,61 @@ ejec_com cmd /c msg * %USERNAME%  "Hola mundo"
 
 # 🐧 Linux
 
+### Usuarios
+##Ver si un usuario es admin
+
+```bash
+groups usuario
+```
+
+## o tambien:
+```bash
+id usuario
+```
+## Ver directamente el grupo
+```bash
+getent group sudo
+```
+## 👉 Te muestra todos los usuarios con privilegios.
+
+## 🔑 2) Volver admin a un usuario
+
+```bash
+sudo adduser nuevo_usuario
+
+```
+### Darle Privilegios
+```bash
+
+sudo usermod -aG sudo nuevo_usuario
+```
+
+
+##🔑 3) Volver admin a un usuario
+```bash
+sudo usermod -aG sudo usuario
+```
+```bash
+-a = append (no borra otros grupos)
+-G = grupos
+
+⚠️ Luego el usuario debe:
+
+cerrar sesión y volver a entrar
+(o ejecutar newgrp sudo, pero mejor relogin limpio)
+```
+
+### Bonus, verifica
+
+## Si muestra permisos, es admin
+```bash
+sudo -l -U usuario
+```
+
+```bash
+
+```
+
 ## 💬 Mensajes
 
 ```bash
@@ -96,6 +152,9 @@ echo "Hola mundo"
 
 ---
 
+```bash
+
+```
 
 ## 🌐 Sistema
 ### Permite ver el espacio en discos
@@ -117,8 +176,81 @@ sudo du -xhd1 /usr 2>/dev/null | sort -h
 
 ## 📏 Tamaño de archivos
 ### Ver tamaño legible de archivos
+### Puedes usar los comandos ls, du o find. 
+###Lista archivos y carpetas del directorio actual.
 ```bash
 ls -lah
+```
+```bash
+🔍 -l (long)
+
+Muestra todo en formato detallado:
+
+permisos (drwxr-xr-x)
+número de enlaces
+dueño y grupo
+tamaño
+fecha
+nombre
+```
+```bash
+👻 -a (all)
+
+Incluye archivos ocultos.
+
+En Linux, todo lo que empieza con . (como .bashrc) normalmente no se ve.
+Con esto, aparece todo.
+```
+```bash
+📏 -h (human)
+
+Hace los tamaños legibles:
+
+1024 → 1K
+1048576 → 1M
+
+👉 Nada de números crudos, lo ves claro.
+
+📂 ls -lah
+
+Te muestra los archivos y su tamaño “tal cual” están.
+```
+
+👉 Es como pasar de ver nombres… a ver la ficha completa.
+
+### Para ver el tamaño de los archivos en la terminal de Linux: 
+### El comando mostrará el tamaño en bytes, 
+```bash
+ls -l
+```
+```bash
+📂Aquí cambia el juego.
+
+du = disk usage
+👉 Mide cuánto espacio REAL están ocupando en disco
+```
+
+```bash
+🧠 La diferencia que importa
+
+Un archivo puede decir que pesa 1 GB (ls)…
+pero en disco puede ocupar:
+
+menos (si está comprimido o sparse)
+más (por bloques del sistema de archivos)
+
+Ahí entra du.
+```
+
+
+### Mostrará el tamaño en un formato más legible (MB, GB, etc.), 
+```bash
+du -h
+```
+
+### find puede usarse para buscar archivos por tamaño. 
+```bash
+
 ```
 
 ---
@@ -135,10 +267,6 @@ ls -la /home/worm
 ### Para ver cuanto ocupa realmente algo (mucho mejor para carpetas/logs):
 ```bash
 du -sh *
-```
-
-```bash
-
 ```
 
 ### O para algo especifico:
@@ -166,6 +294,14 @@ osascript -e 'display dialog "Proceso completado" buttons {"OK"}'
 ---
 
 # ⚙️ Otros
+
+## Cambiar ip fija en Linux
+### Con esto se puede cambiar la ip 
+
+```bash
+sudo nano /etc/netplan/01-netcfg.yaml
+sudo netplan apply
+```
 
 ## 🕵️ Procesos
 ### 👉 Clásico de sysadmin. Aquí ves si tu gusano está vivo… o si hay clones.
@@ -251,7 +387,11 @@ sudo systemctl status ssh
 ```
 
 ---
+## Levantar servidor sencillo python
 
+```bash
+python -m http.server 8000
+```
 ## 🐍 Instalar Python 3.12
 
 ```bash
@@ -328,7 +468,19 @@ sudo install -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/
  sudo apt install code
 
 ```
+## Librerias
+### Librerias de desarrollo Linux --- caso cyber
 
+```bash
+1. sudo apt update
+2. sudo apt install libsystemd-dev
+Verificar:
+ls /usr/lib/x86_64-linux-gnu/libsystemd.so
+```
+
+```bash
+
+```
 ---
 
 # 📜 Licencia
